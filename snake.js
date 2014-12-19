@@ -18,11 +18,7 @@ function Snake(segmentLength, head, interval, width, unit) {
                                                 .times(segmentLength)));
                 } else {
                     coords[0] = mouse;
-                    forCoords(function(current, last, i) {
-                        coords[i] = last.plus(current.minus(last)
-                                                     .normalise()
-                                                     .times(segmentLength));
-                    });
+                    pull();
                 }
             } else if (mouse.minus(coords[0]).length() < segmentLength)
                 started = true;
@@ -33,7 +29,17 @@ function Snake(segmentLength, head, interval, width, unit) {
         self.bind = function() { return false; };
         return true;
 
+        function pull() {
+            forCoords(function(current, last, i) {
+                coords[i] = last.plus(current.minus(last)
+                                             .normalise()
+                                             .times(segmentLength));
+            });
+        }
+
         function draw() {
+            var dx = (segmentLength + width) / 2,
+                dy = width / 2;
             forCoords(function(current, last, i) {
                 var element = elements[i];
                 if (!element) {
@@ -44,8 +50,8 @@ function Snake(segmentLength, head, interval, width, unit) {
                     arena.appendChild(element);
                 }
                 var centre = last.plus(current).over(2);
-                element.style.top = centre.y + unit;
-                element.style.left = centre.x + unit;
+                element.style.top = centre.y - dy + unit;
+                element.style.left = centre.x - dx + unit;
                 element.style.transform = element.style.webkitTransform =
                     'rotate(' + current.minus(last).angle() + 'rad)';
             });

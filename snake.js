@@ -1,7 +1,25 @@
 function Snake(segmentLength, head, interval, width, unit) {
     var coords = [ head ],
         self = this,
-        length = 1;
+        length = 1,
+        moveCallbacks = [],
+        autocollisionCallbacks = [];
+
+    this.onMove = function(callback) {
+        moveCallbacks.push(callback);
+    };
+    this.autoCollide = function(callback) {
+        autocollisionCallbacks.push(callback);
+    };
+
+    this.distanceTo = function(point) {
+        var d = Infinity;
+        forCoords(function(current, last) {
+            var currentD = point.distanceToSegment(current, last);
+            if (currentD < d) d = currentD;
+        });
+        return d;
+    };
 
     this.bind = function(arena) {
         var started = false,
@@ -24,6 +42,7 @@ function Snake(segmentLength, head, interval, width, unit) {
                 started = true;
 
             draw();
+            moveCallbacks.forEach(function(callback) { callback(); });
         });
 
         self.bind = function() { return false; };
@@ -41,7 +60,8 @@ function Snake(segmentLength, head, interval, width, unit) {
             var dx = (segmentLength + width) / 2,
                 dy = width / 2;
             forCoords(function(current, last, i) {
-                var element = elements[i];
+                var element = elements[i],
+                    centre = last.plus(current).over(2);
                 if (!element) {
                     element = elements[i] = document.createElement('div');
                     element.classList.add('snake-segment');
@@ -49,7 +69,6 @@ function Snake(segmentLength, head, interval, width, unit) {
                     element.style.width = segmentLength + width + unit;
                     arena.appendChild(element);
                 }
-                var centre = last.plus(current).over(2);
                 element.style.top = centre.y - dy + unit;
                 element.style.left = centre.x - dx + unit;
                 element.style.transform = element.style.webkitTransform =

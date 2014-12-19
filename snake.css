@@ -1,12 +1,20 @@
 #arena {
     width: 500px;
     height: 500px;
+    left: 140px;
+    top: 140px;
     border-radius: 250px;
     background: #ccc;
     position: absolute;
 }
 
 .snake-segment {
+    background: black;
+    border-radius: 300px;
+    position: absolute;
+}
+
+.pip {
     background: black;
     border-radius: 300px;
     position: absolute;

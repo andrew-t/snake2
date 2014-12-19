@@ -28,7 +28,7 @@ function Snake(segmentLength, head, interval, width, unit, arenaSize) {
         arena.addEventListener('mousemove', function(event) {
             var mouse = XY.event(event).minus(XY.element(arena));
             if (mouse.minus(new XY(arenaSize, arenaSize)).length() > arenaSize - width) return;
-            
+
             if (started) {
                 if (coords.length < length) {
                     if (mouse.minus(coords[0]).length() >= segmentLength)
@@ -96,7 +96,7 @@ function Snake(segmentLength, head, interval, width, unit, arenaSize) {
     };
 
     this.grow = function(extra) {
-        length += extra;
+        return length += extra;
     };
 
     this.trim = function(maxLength) {
@@ -104,10 +104,20 @@ function Snake(segmentLength, head, interval, width, unit, arenaSize) {
             length = maxLength;
             if (coords.length > length)
                 coords.length = length;
-            while (elements.length > length)
-                arena.removeChild(elements.pop());
+            while (elements.length > length) {
+                var element = elements.pop();
+                element.style.opacity = 0;
+                setTimeout(function() {
+                    arena.removeChild(element);
+                }, 600);
+            }
         }
+        return length;
     };
+
+    this.trueLength = function() {
+        return coords.length;
+    }
 
     function forCoords(callback) {
         for (var i = 1; i < coords.length; ++i)

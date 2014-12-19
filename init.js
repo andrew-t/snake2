@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
         snake = new Snake(15, new XY(arenaSize, arenaSize), 200, snakeWidth, unit, arenaSize),
         pipLocation,
         pipSize = 20,
+        score = 0,
+        maxScore = 0,
         pipElement = document.getElementById('pip');
     snake.bind(arena);
     snake.onMove(function() {
@@ -13,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
             snake.grow(10);
             positionPip();
         }
+        document.getElementById('score').innerText = score = snake.trueLength();
+        if (score > maxScore)
+            document.getElementById('max-score').innerText = maxScore = score;
     });
     snake.onAutocollide(function(collision) {
         snake.trim(Math.max(collision.point, collision.segment));

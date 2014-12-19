@@ -12,6 +12,8 @@
     background: black;
     border-radius: 300px;
     position: absolute;
+    transition: opacity 600ms;
+    -webkit-transition: opacity 600ms;
 }
 
 .pip {

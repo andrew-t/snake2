@@ -15,14 +15,16 @@ document.addEventListener('DOMContentLoaded', function() {
             snake.grow(10);
             positionPip();
         }
-        document.getElementById('score').innerText = score = snake.trueLength();
+        document.getElementById('score').innerText =
+            score = snake.trueLength() - 1;
         if (score > maxScore)
-            document.getElementById('max-score').innerText = maxScore = score;
+            document.getElementById('max-score').innerText =
+                maxScore = score;
     });
     snake.onAutocollide(function(collision) {
         snake.trim(Math.max(collision.point, collision.segment));
     });
-    snake.grow(9);
+    snake.grow(10);
     positionPip();
 
     pipElement.style.width = pipSize * 2 + unit;

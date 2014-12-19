@@ -3,16 +3,19 @@ document.addEventListener('DOMContentLoaded', function() {
         arenaSize = 250,
         snakeWidth = 10,
         arena = document.getElementById('arena'),
-        snake = new Snake(15, new XY(arenaSize, arenaSize), 200, snakeWidth, unit),
+        snake = new Snake(15, new XY(arenaSize, arenaSize), 200, snakeWidth, unit, arenaSize),
         pipLocation,
         pipSize = 20,
         pipElement = document.getElementById('pip');
     snake.bind(arena);
     snake.onMove(function() {
-        if (snake.distanceTo(pipLocation) < pipSize + snakeWidth / 10) {
+        if (snake.distanceTo(pipLocation) < pipSize + snakeWidth / 2) {
             snake.grow(10);
             positionPip();
         }
+    });
+    snake.onAutocollide(function(collision) {
+        snake.trim(Math.max(collision.point, collision.segment));
     });
     snake.grow(10);
     positionPip();

@@ -42,15 +42,17 @@ XY.prototype.toString = function() {
     return '(' + this.x + ', ' + this.y + ')';
 };
 
-XY.prototype.distanceToSegment = function(a, b) {
-    // http://stackoverflow.com/questions/849211/shortest-distance-between-a-point-and-a-line-segment
-    if (a.equals(b))
-        return this.minus(a).length();
+// http://stackoverflow.com/questions/849211/shortest-distance-between-a-point-and-a-line-segment
+XY.prototype.nearestPointOnSegment = function(a, b) {
+    if (a.equals(b)) return a;
     var direction = b.minus(a),
         t = this.minus(a).dot(direction) / direction.length();
-    if (t < 0) return this.minus(a).length();
-    if (t > 1) return this.minus(b).length();
-    return this.minus(a.plus(direction.times(t))).length();
+    if (t < 0) return a;
+    if (t > 1) return b;
+    return a.plus(direction.times(t));
+};
+XY.prototype.distanceToSegment = function(a, b) {
+    return this.minus(this.nearestPointOnSegment(a, b)).length();
 };
 
 XY.event = function(event) {

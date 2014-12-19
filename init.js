@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     snake.onAutocollide(function(collision) {
         snake.trim(Math.max(collision.point, collision.segment));
     });
-    snake.grow(10);
+    snake.grow(9);
     positionPip();
 
     pipElement.style.width = pipSize * 2 + unit;

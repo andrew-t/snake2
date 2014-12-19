@@ -104,13 +104,12 @@ function Snake(segmentLength, head, interval, width, unit, arenaSize) {
             length = maxLength;
             if (coords.length > length)
                 coords.length = length;
-            while (elements.length > length) {
-                var element = elements.pop();
+            while (elements.length > length) (function(element) {
                 element.style.opacity = 0;
                 setTimeout(function() {
                     arena.removeChild(element);
                 }, 600);
-            }
+            })(elements.pop());
         }
         return length;
     };

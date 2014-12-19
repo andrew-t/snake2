@@ -15,10 +15,10 @@ document.addEventListener('DOMContentLoaded', function() {
             snake.grow(10);
             positionPip();
         }
-        document.getElementById('score').innerText =
+        document.getElementById('score').innerHTML =
             score = snake.trueLength() - 1;
         if (score > maxScore)
-            document.getElementById('max-score').innerText =
+            document.getElementById('max-score').innerHTML =
                 maxScore = score;
     });
     snake.onAutocollide(function(collision) {

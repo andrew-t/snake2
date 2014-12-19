@@ -1,0 +1,13 @@
+#arena {
+    width: 500px;
+    height: 500px;
+    border-radius: 250px;
+    background: #ccc;
+    position: absolute;
+}
+
+.snake-segment {
+    background: black;
+    border-radius: 300px;
+    position: absolute;
+}

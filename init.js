@@ -1,11 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
-    var unit = 'px',
-        arenaSize = 250,
-        snakeWidth = 10,
+    var unit = 'vmin',
+        arenaSize = 45,
+        snakeWidth = 2,
+        segmentLength = 3,
         arena = document.getElementById('arena'),
-        snake = new Snake(15, new XY(arenaSize, arenaSize), 200, snakeWidth, unit, arenaSize),
+        snake = new Snake(segmentLength, new XY(arenaSize, arenaSize), snakeWidth, unit, arenaSize),
         pipLocation,
-        pipSize = 20,
+        pipSize = 4,
         score = 0,
         maxScore = 0,
         pipElement = document.getElementById('pip');
@@ -31,7 +32,18 @@ document.addEventListener('DOMContentLoaded', function() {
     pipElement.style.height = pipSize * 2 + unit;
     arena.style.width = arenaSize * 2 + unit;
     arena.style.height = arenaSize * 2 + unit;
-      
+
+    arena.addEventListener('click', pause);
+    arena.addEventListener('mouseleave', pause);
+    document.getElementById('pause-overlay').addEventListener('click', function (e) {
+        arena.classList.remove('paused');
+        arena.classList.add('still-paused');
+    });
+    
+    function pause() {
+        snake.pause();
+        arena.classList.add('paused');
+    }
     function positionPip() {
         do pipLocation = new XY(Math.random() * arenaSize * 2, Math.random() * arenaSize * 2);
         while ((pipLocation.minus(new XY(arenaSize, arenaSize)).length() > arenaSize - pipSize) ||

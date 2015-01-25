@@ -1,4 +1,4 @@
-function Snake(segmentLength, head, interval, width, unit, arenaSize) {
+function Snake(segmentLength, head, width, unit, arenaSize) {
     var coords = [ head ],
         self = this,
         length = 1,
@@ -23,10 +23,12 @@ function Snake(segmentLength, head, interval, width, unit, arenaSize) {
     };
 
     this.bind = function(arena) {
-        var started = false;
+        var started = false,
+            mouseMultiplier;
 
+        arena.classList.remove('started');
         arena.addEventListener('mousemove', function(event) {
-            var mouse = XY.event(event).minus(XY.element(arena));
+            var mouse = XY.event(event).minus(XY.element(arena)).times(mouseMultiplier);
             if (mouse.minus(new XY(arenaSize, arenaSize)).length() > arenaSize - width) return;
 
             if (started) {
@@ -40,8 +42,11 @@ function Snake(segmentLength, head, interval, width, unit, arenaSize) {
                     coords[0] = mouse;
                     pull();
                 }
-            } else if (mouse.minus(coords[0]).length() < segmentLength)
+            } else if (mouse.minus(coords[0]).length() < segmentLength) {
+                arena.classList.remove('still-paused');
+                arena.classList.add('started');
                 started = true;
+            }
 
             draw();
             moveCallbacks.forEach(function(callback) { callback(); });
@@ -63,8 +68,17 @@ function Snake(segmentLength, head, interval, width, unit, arenaSize) {
                 });
         });
 
-        self.bind = function() { return false; };
-        return true;
+        self.bind = function() { throw 'Already bound.'; };
+        self.recalibrate = function () {
+            // We assume no crazy box model stuff here.
+            mouseMultiplier = arenaSize * 2 / arena.clientWidth;
+        };
+        self.pause = function () {
+            started = false;
+        }
+
+        self.recalibrate();
+        window.addEventListener('resize', self.recalibrate);
 
         function pull() {
             forCoords(function(current, last, i) {
@@ -123,3 +137,8 @@ function Snake(segmentLength, head, interval, width, unit, arenaSize) {
             callback(coords[i], coords[i - 1], i);
     };
 }
+
+Snake.prototype.pause = 
+Snake.prototype.recalibrate = function() {
+    throw 'Not yet bound.';
+};

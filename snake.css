@@ -1,16 +1,41 @@
+body {
+    font-family: sans-serif;
+}
+
 #arena {
-    width: 500px;
-    height: 500px;
-    left: 140px;
-    top: 140px;
-    border-radius: 250px;
+    width: 90vmin;
+    height: 90vmin;
+    left: calc(50vw - 45vmin);
+    top: calc(100vh - 95vmin);
+    /*  I'm using border-radius: 100vmax as a shorthand
+        for 'be a circle whatever size you are'. */
+    border-radius: 100vmax;
     background: #ccc;
     position: absolute;
+    z-index: 1;
+    box-shadow: 0 .5vmin 1vmin black;
+}
+#arena:not(.started):after {
+    background: transparent;
+    border-radius: 100vmax;
+    position: absolute;
+    border: 1px solid black;
+    width: 5vmin;
+    height: 5vmin;
+    left: calc(42.5vmin - 1px);
+    top: calc(42.5vmin - 1px);
+    content: ' ';
+}
+#arena.started:not(.still-paused) {
+    cursor: none;
+}
+#arena.started + #intro {
+    display: none;
 }
 
 .snake-segment {
     background: black;
-    border-radius: 300px;
+    border-radius: 100vmax;
     position: absolute;
     transition: opacity 600ms;
     -webkit-transition: opacity 600ms;
@@ -18,6 +43,63 @@
 
 .pip {
     background: black;
-    border-radius: 300px;
+    border-radius: 100vmax;
     position: absolute;
+}
+
+#pause-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-weight: bold;
+    text-shadow: 0 .1em .2em black;
+    text-align: center;
+    padding-top: 40vh;
+    z-index: 10;
+    cursor: default;
+}
+#arena:not(.paused) ~ #pause-overlay {
+    display: none;
+}
+
+#arena:not(.started) ~ .score {
+    display: none;
+}
+
+.score {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    padding: 0 5vmin;
+}
+.score.left {
+    text-align: left;
+    left: 0;
+}
+.score.right {
+    text-align: right;
+    right: 0;
+}
+.score .counter {
+    font-size: 5em;
+    display: block;
+    font-weight: 900;
+}
+
+@media (max-width: 575px) {
+    body > h1 {
+        display: none;
+    }
+}
+@media (max-height: 105vw) {
+    body > h1 {
+        display: none;
+    }
+}
+h1, #intro {
+    text-align: center;
 }

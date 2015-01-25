@@ -6,11 +6,16 @@
         <script type="text/javascript" src="init.js"></script>
     </head>
     <body>
-        Mouse over the centre of the grey circle to begin.
+        <h1>Analogue Snake II</h1>
         <div id="arena">
             <div id="pip" class="pip"></div>
         </div>
-        <p>Current length: <span id="score">0</span></p>
-        <p>Maximum length: <span id="max-score">0</span></p>
+        <p id="intro">Mouse over the centre of the grey circle to begin. Click to pause.</p>
+        <section id="pause-overlay">
+            <h1>PAUSED</h1>
+            <p>Click, then mouse over the head of the snake to begin.</p>
+        </section>
+        <p class="score left">Current length: <span class="counter" id="score">0</span></p>
+        <p class="score right">Maximum length: <span class="counter" id="max-score">0</span></p>
     </body>
 </html>

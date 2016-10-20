@@ -27,10 +27,34 @@ function Snake(segmentLength, head, width, unit, arenaSize) {
             mouseMultiplier;
 
         arena.classList.remove('started');
+
+        var padCoords = coords[0];
+        everyFrame(function (time) {
+            var pad = navigator.getGamepads()[0];
+            if (!pad) return;
+
+            var stick = new XY(getAxis(pad, 0), getAxis(pad, 1));
+
+            padCoords = padCoords.plus(stick.times(time * padSpeed));
+
+            if (padCoords.minus(head).length() > arenaSize)
+                padCoords = padCoords
+                    .minus(head)
+                    .normalise()
+                    .times(arenaSize)
+                    .plus(head);
+
+            moveTo(padCoords);
+        }, 100);
+
         arena.addEventListener('mousemove', function(event) {
             var mouse = XY.event(event).minus(XY.element(arena)).times(mouseMultiplier);
             if (mouse.minus(new XY(arenaSize, arenaSize)).length() > arenaSize - width) return;
 
+            moveTo(mouse);
+        });
+
+        function moveTo(mouse) {
             if (started) {
                 if (coords.length < length) {
                     if (mouse.minus(coords[0]).length() >= segmentLength)
@@ -66,7 +90,7 @@ function Snake(segmentLength, head, width, unit, arenaSize) {
                 autocollisionCallbacks.forEach(function(callback) {
                     callback(collision);
                 });
-        });
+        }
 
         self.bind = function() { throw 'Already bound.'; };
         self.recalibrate = function () {
@@ -142,3 +166,9 @@ Snake.prototype.pause =
 Snake.prototype.recalibrate = function() {
     throw 'Not yet bound.';
 };
+
+var deadzone = 0.08,
+    padSpeed = 0.05;
+function getAxis(pad, n) {
+    return (Math.abs(pad.axes[n]) < deadzone) ? 0 : pad.axes[n];
+}
